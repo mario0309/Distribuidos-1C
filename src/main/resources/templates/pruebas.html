@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pruebas de Excepciones</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .bloque {
+            margin-top: 25px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        button {
+            margin: 8px 8px 0 0;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 6px;
+            background: #0d6efd;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0b5ed7;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #0d6efd;
+        }
+
+        .resultado-base {
+            margin-top: 20px;
+            padding: 18px;
+            border-radius: 8px;
+        }
+
+        .resultado-vacio {
+            background: #eef5ff;
+            border-left: 4px solid #0d6efd;
+            color: #1d4f91;
+        }
+
+        .resultado-ok {
+            background: #edf9f0;
+            border-left: 6px solid #2d9d57;
+            color: #1f5130;
+        }
+
+        .resultado-error {
+            background: #fdeeee;
+            border-left: 6px solid #d93025;
+            color: #7a1f1f;
+        }
+
+        .resultado-titulo {
+            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 22px;
+        }
+
+        .resultado-linea {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+
+        .resultado-label {
+            font-weight: bold;
+        }
+
+        .resultado-json {
+            margin-top: 14px;
+            padding: 12px;
+            background: rgba(0,0,0,0.04);
+            border-radius: 6px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+        }
+
+        .oculto {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Pantalla de simulación de excepciones</h1>
+    <p>Desde aquí se lanzan pruebas contra el API Flask para simular errores controlados.</p>
+
+    <div class="bloque">
+        <h2>Pruebas de archivos</h2>
+        <button onclick="location.href='/pruebas?tipo=file&mode=ok'">Archivo correcto</button>
+        <button onclick="location.href='/pruebas?tipo=file&mode=missing'">Archivo no encontrado</button>
+        <button onclick="location.href='/pruebas?tipo=file&mode=read-error'">Error de lectura</button>
+    </div>
+
+    <div class="bloque">
+        <h2>Pruebas de base de datos</h2>
+        <button onclick="location.href='/pruebas?tipo=db&mode=ok'">Consulta correcta</button>
+        <button onclick="location.href='/pruebas?tipo=db&mode=connection-error'">Error de conexión</button>
+        <button onclick="location.href='/pruebas?tipo=db&mode=bad-query'">Consulta inválida</button>
+    </div>
+
+    <div class="bloque">
+        <h2>Pruebas de API externa (Pokémon)</h2>
+        <button onclick="location.href='/pruebas?tipo=pokemon&mode=ok'">Pokémon válido</button>
+        <button onclick="location.href='/pruebas?tipo=pokemon&mode=not-found'">Pokémon no encontrado</button>
+        <button onclick="location.href='/pruebas?tipo=pokemon&mode=timeout'">Timeout / error remoto</button>
+    </div>
+
+    <div th:if="${resultado == null}" class="resultado-base resultado-vacio">
+        <div class="resultado-titulo">Resultado</div>
+        <div>Aquí se mostrará la respuesta devuelta por el API Python.</div>
+    </div>
+
+    <div th:if="${resultado != null}" id="resultadoBox" class="resultado-base resultado-vacio">
+        <div id="resultadoTitulo" class="resultado-titulo">Resultado de la prueba</div>
+
+        <div id="resultadoCampos">
+            <div class="resultado-linea oculto" id="lineaEstado">
+                <span class="resultado-label">Estado:</span>
+                <span id="campoEstado"></span>
+            </div>
+
+            <div class="resultado-linea oculto" id="lineaTest">
+                <span class="resultado-label">Tipo de prueba:</span>
+                <span id="campoTest"></span>
+            </div>
+
+            <div class="resultado-linea oculto" id="lineaMensaje">
+                <span class="resultado-label">Mensaje:</span>
+                <span id="campoMensaje"></span>
+            </div>
+
+            <div class="resultado-linea oculto" id="lineaUserMessage">
+                <span class="resultado-label">Mensaje para usuario:</span>
+                <span id="campoUserMessage"></span>
+            </div>
+
+            <div class="resultado-linea oculto" id="lineaErrorType">
+                <span class="resultado-label">Tipo de error:</span>
+                <span id="campoErrorType"></span>
+            </div>
+
+            <div class="resultado-linea oculto" id="lineaTechnicalMessage">
+                <span class="resultado-label">Detalle técnico:</span>
+                <span id="campoTechnicalMessage"></span>
+            </div>
+
+            <div class="resultado-linea oculto" id="lineaCritical">
+                <span class="resultado-label">Crítico:</span>
+                <span id="campoCritical"></span>
+            </div>
+        </div>
+
+        <div id="resultadoJson" class="resultado-json oculto"></div>
+
+        <div id="resultadoTextoRaw" class="oculto" th:text="${resultado}"></div>
+    </div>
+
+    <a href="/">Volver al inicio</a>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const box = document.getElementById("resultadoBox");
+    const titulo = document.getElementById("resultadoTitulo");
+    const raw = document.getElementById("resultadoTextoRaw");
+    const jsonBox = document.getElementById("resultadoJson");
+
+    if (!box || !raw) return;
+
+    const contenido = (raw.textContent || "").trim();
+    if (!contenido) return;
+
+    function mostrar(idLinea, idCampo, valor) {
+        if (valor === undefined || valor === null || valor === "") return;
+        document.getElementById(idLinea).classList.remove("oculto");
+        document.getElementById(idCampo).textContent = valor;
+    }
+
+    box.classList.remove("resultado-vacio");
+
+    try {
+        const data = JSON.parse(contenido);
+
+        if (data.ok === true) {
+            box.classList.add("resultado-ok");
+            titulo.textContent = "Resultado correcto";
+            mostrar("lineaEstado", "campoEstado", "Correcto");
+        } else {
+            box.classList.add("resultado-error");
+            titulo.textContent = "Excepción capturada";
+            mostrar("lineaEstado", "campoEstado", "Error");
+        }
+
+        mostrar("lineaTest", "campoTest", data.test);
+        mostrar("lineaMensaje", "campoMensaje", data.message);
+        mostrar("lineaUserMessage", "campoUserMessage", data.userMessage);
+        mostrar("lineaErrorType", "campoErrorType", data.errorType);
+        mostrar("lineaTechnicalMessage", "campoTechnicalMessage", data.technicalMessage);
+
+        if (data.critical !== undefined) {
+            mostrar("lineaCritical", "campoCritical", data.critical ? "Sí" : "No");
+        }
+
+        if (!data.message && !data.userMessage && !data.errorType && !data.technicalMessage) {
+            jsonBox.classList.remove("oculto");
+            jsonBox.textContent = contenido;
+        }
+
+    } catch (e) {
+        box.classList.add("resultado-error");
+        titulo.textContent = "Excepción capturada";
+        jsonBox.classList.remove("oculto");
+        jsonBox.textContent = contenido;
+    }
+});
+</script>
+</body>
+</html>
