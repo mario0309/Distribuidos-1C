@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
@@ -32,6 +33,19 @@ public class TeamController {
     @PostMapping("/teams/save")
     public String saveTeam(@ModelAttribute Team team) {
         teamService.save(team);
+        return "redirect:/teams";
+    }
+
+    @GetMapping("/teams/edit/{id}")
+    public String showEditForm(@PathVariable Integer id, Model model) {
+        Team team = teamService.findById(id).orElseThrow(() -> new IllegalArgumentException("Equipo no encontrado: " + id));
+        model.addAttribute("team", team);
+        return "teams/form";
+    }
+
+    @GetMapping("/teams/delete/{id}")
+    public String deleteTeam(@PathVariable Integer id) {
+        teamService.deleteById(id);
         return "redirect:/teams";
     }
 }

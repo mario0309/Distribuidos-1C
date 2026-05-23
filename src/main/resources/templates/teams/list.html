@@ -22,7 +22,7 @@
                 No hay equipos registrados todavía.
             </div>
 
-            <table th:if="${!#lists.isEmpty(teams)}" class="table table-striped table-hover">
+            <table th:if="${!#lists.isEmpty(teams)}" class="table table-striped table-hover align-middle">
                 <thead class="table-dark">
                 <tr>
                     <th>ID</th>
@@ -30,6 +30,7 @@
                     <th>Ciudad</th>
                     <th>Entrenador</th>
                     <th>Fecha fundación</th>
+                    <th>Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -39,6 +40,14 @@
                     <td th:text="${team.ciudad}"></td>
                     <td th:text="${team.entrenador}"></td>
                     <td th:text="${team.fechaFundacion}"></td>
+                    <td>
+                        <a th:href="@{/teams/edit/{id}(id=${team.id})}" class="btn btn-sm btn-warning">Editar</a>
+                        <a th:href="@{/teams/delete/{id}(id=${team.id})}"
+                           class="btn btn-sm btn-danger"
+                           onclick="return confirm('¿Seguro que quieres borrar este equipo?')">
+                            Borrar
+                        </a>
+                    </td>
                 </tr>
                 </tbody>
             </table>
