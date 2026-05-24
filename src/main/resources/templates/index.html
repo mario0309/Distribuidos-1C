@@ -1,61 +1,123 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Práctica 2 - Gestión de Excepciones</title>
+    <title>BasketHub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #f4f4f4;
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #222;
-        }
-        p {
-            line-height: 1.6;
-        }
-        .menu a {
-            display: inline-block;
-            margin-right: 15px;
-            margin-top: 15px;
-            padding: 10px 16px;
-            background: #0d6efd;
+        .hero {
+            background: linear-gradient(135deg, #0d1b2a, #1b263b, #415a77);
             color: white;
-            text-decoration: none;
-            border-radius: 6px;
+            padding: 80px 0;
         }
-        .menu a:hover {
-            background: #0b5ed7;
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        .feature-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: none;
+            border-radius: 16px;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+        }
+
+        .section-title {
+            font-weight: 700;
         }
     </style>
 </head>
-<body>
-<div class="container">
-    <h1>Práctica Obligatoria 2</h1>
-    <p>Sistema con Spring Boot y API en Python para gestión y simulación de excepciones.</p>
+<body class="bg-light">
+	
 
-    <h2>Funciones</h2>
-    <ul>
-        <li>Login sencillo</li>
-        <li>Simulación de errores de archivos</li>
-        <li>Simulación de errores de base de datos</li>
-        <li>Simulación de errores de API externa (Pokémon)</li>
-    </ul>
+<div th:replace="fragments/navbar :: navbar"></div>
 
-    <div class="menu">
-        <a href="/">Inicio</a>
-        <a href="/login">Login</a>
-        <a href="/pruebas">Ir a pruebas</a>
+<section class="hero">
+    <div class="container text-center">
+        <h1>BasketHub</h1>
+        <p class="mt-3 mb-4">
+            Plataforma web para gestionar usuarios, equipos y jugadores de baloncesto
+            de forma visual, segura y sencilla.
+        </p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="/teams" class="btn btn-warning btn-lg">Ver equipos</a>
+            <a href="/players" class="btn btn-outline-light btn-lg">Ver jugadores</a>
+        </div>
     </div>
-</div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Gestión principal</h2>
+            <p class="text-muted">Accede rápidamente a los módulos principales de la aplicación.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card feature-card shadow-sm h-100">
+                    <div class="card-body">
+                        <h3 class="h4">Usuarios</h3>
+                        <p class="text-muted">
+                            Mantenimiento de usuarios del sistema con opciones de alta, edición y borrado.
+                        </p>
+                        <a href="/users" class="btn btn-dark">Ir a usuarios</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card feature-card shadow-sm h-100">
+                    <div class="card-body">
+                        <h3 class="h4">Equipos</h3>
+                        <p class="text-muted">
+                            Gestiona los equipos de baloncesto, su ciudad, entrenador y fecha de fundación.
+                        </p>
+                        <a href="/teams" class="btn btn-dark">Ir a equipos</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card feature-card shadow-sm h-100">
+                    <div class="card-body">
+                        <h3 class="h4">Jugadores</h3>
+                        <p class="text-muted">
+                            Controla los jugadores, su dorsal, posición, altura y equipo asignado.
+                        </p>
+                        <a href="/players" class="btn btn-dark">Ir a jugadores</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="pb-5">
+    <div class="container">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h3 class="h4 mb-3">Sobre la aplicación</h3>
+                <p class="mb-0 text-muted">
+                    BasketHub está desarrollada con Spring Boot, Thymeleaf, JPA, Hibernate y Spring Security.
+                    La aplicación sigue una arquitectura web en capas y ofrece una experiencia de navegación
+                    centrada en la gestión segura de información de baloncesto.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
