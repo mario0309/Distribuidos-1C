@@ -50,6 +50,9 @@ public class SecurityConfig {
 
                         .requestMatchers("/teams", "/players")
                         .hasAnyRole("ADMIN", "MANAGER", "PLAYER")
+                        
+                        .requestMatchers("/teams", "/players", "/map")
+                        .hasAnyRole("ADMIN", "MANAGER", "PLAYER")
 
                         .anyRequest().authenticated()
                 )

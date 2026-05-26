@@ -168,7 +168,7 @@
             <div class="sidebar-section" sec:authorize="hasAnyRole('ADMIN','MANAGER','PLAYER')">Gestión deportiva</div>
             <a sec:authorize="hasAnyRole('ADMIN','MANAGER','PLAYER')" href="/teams" class="nav-link-custom">Equipos</a>
             <a sec:authorize="hasAnyRole('ADMIN','MANAGER','PLAYER')" href="/players" class="nav-link-custom">Jugadores</a>
-
+			<a sec:authorize="hasAnyRole('ADMIN','MANAGER','PLAYER')" href="/map" class="nav-link-custom">Mapa</a>
             <div class="sidebar-section" sec:authorize="hasRole('ADMIN')">Administración</div>
             <a sec:authorize="hasRole('ADMIN')" href="/users" class="nav-link-custom">Usuarios</a>
 
