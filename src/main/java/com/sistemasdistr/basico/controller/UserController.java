@@ -6,6 +6,7 @@ import com.sistemasdistr.basico.service.mapper.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class UserController {
@@ -47,8 +48,17 @@ public class UserController {
     }
 
     @GetMapping("/users/delete/{id}")
-    public String deleteUser(@PathVariable Integer id) {
-        userService.deleteById(id);
+    public String deleteUser(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        boolean deleted = userService.deleteByIdProtected(id);
+
+        if (!deleted) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "No se puede borrar el último usuario administrador del sistema.");
+            return "redirect:/users";
+        }
+
+        redirectAttributes.addFlashAttribute("successMessage",
+                "Usuario eliminado correctamente.");
         return "redirect:/users";
     }
 }

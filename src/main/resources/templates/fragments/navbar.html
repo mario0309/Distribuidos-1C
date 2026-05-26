@@ -3,42 +3,197 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
-<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="/">BasketHub</a>
+<div th:fragment="appLayout(pageTitle, content)">
+    <style>
+        :root {
+            --sidebar-bg: #111827;
+            --sidebar-hover: #1f2937;
+            --sidebar-text: #e5e7eb;
+            --accent: #f59e0b;
+            --page-bg: #f3f4f6;
+            --card-bg: #ffffff;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+        }
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        body {
+            margin: 0;
+            background: var(--page-bg);
+            font-family: Arial, sans-serif;
+        }
 
-        <div class="collapse navbar-collapse" id="mainNavbar">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Inicio</a>
-                </li>
+        .app-shell {
+            display: flex;
+            min-height: 100vh;
+        }
 
-                <li class="nav-item" sec:authorize="hasAnyRole('ADMIN','MANAGER','PLAYER')">
-                    <a class="nav-link" href="/teams">Equipos</a>
-                </li>
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            display: flex;
+            flex-direction: column;
+            padding: 24px 18px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+        }
 
-                <li class="nav-item" sec:authorize="hasAnyRole('ADMIN','MANAGER','PLAYER')">
-                    <a class="nav-link" href="/players">Jugadores</a>
-                </li>
+        .brand {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 28px;
+        }
 
-                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
-                    <a class="nav-link" href="/users">Usuarios</a>
-                </li>
-            </ul>
+        .brand span {
+            color: var(--accent);
+        }
 
-            <div class="d-flex gap-2">
-                <a sec:authorize="isAnonymous()" href="/login" class="btn btn-outline-light btn-sm">Login</a>
+        .sidebar-section {
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #9ca3af;
+            margin: 16px 10px 10px;
+        }
 
-                <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" class="d-inline">
-                    <button type="submit" class="btn btn-warning btn-sm">Logout</button>
+        .nav-link-custom {
+            display: block;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            padding: 12px 14px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            transition: 0.2s ease;
+            font-weight: 600;
+        }
+
+        .nav-link-custom:hover {
+            background: var(--sidebar-hover);
+            color: white;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 20px;
+        }
+
+        .logout-btn {
+            width: 100%;
+            border: none;
+            background: var(--accent);
+            color: #111827;
+            font-weight: 700;
+            border-radius: 12px;
+            padding: 11px 14px;
+        }
+
+        .login-btn {
+            width: 100%;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            background: transparent;
+            border: 1px solid #374151;
+            color: white;
+            font-weight: 700;
+            border-radius: 12px;
+            padding: 11px 14px;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 22px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .topbar-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+            color: #111827;
+        }
+
+        .topbar-subtitle {
+            margin: 4px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .page-body {
+            padding: 28px 32px;
+        }
+
+        .panel-card {
+            background: var(--card-bg);
+            border-radius: 18px;
+            box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+            border: 1px solid var(--border);
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                position: static;
+                width: 100%;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .app-shell {
+                flex-direction: column;
+            }
+        }
+    </style>
+
+    <div class="app-shell">
+        <aside class="sidebar">
+            <a href="/" class="brand">Basket<span>Hub</span></a>
+
+            <div class="sidebar-section">Principal</div>
+            <a href="/" class="nav-link-custom">Inicio</a>
+
+            <div class="sidebar-section" sec:authorize="hasAnyRole('ADMIN','MANAGER','PLAYER')">Gestión deportiva</div>
+            <a sec:authorize="hasAnyRole('ADMIN','MANAGER','PLAYER')" href="/teams" class="nav-link-custom">Equipos</a>
+            <a sec:authorize="hasAnyRole('ADMIN','MANAGER','PLAYER')" href="/players" class="nav-link-custom">Jugadores</a>
+
+            <div class="sidebar-section" sec:authorize="hasRole('ADMIN')">Administración</div>
+            <a sec:authorize="hasRole('ADMIN')" href="/users" class="nav-link-custom">Usuarios</a>
+
+            <div class="sidebar-footer">
+                <a sec:authorize="isAnonymous()" href="/login" class="login-btn">Iniciar sesión</a>
+
+                <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+                    <button type="submit" class="logout-btn">Cerrar sesión</button>
                 </form>
             </div>
-        </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="topbar">
+                <div>
+                    <h1 class="topbar-title" th:text="${pageTitle}">Panel</h1>
+                    <p class="topbar-subtitle">Panel de gestión profesional de baloncesto</p>
+                </div>
+            </div>
+
+            <div class="page-body" th:replace="${content}">
+                Contenido
+            </div>
+        </main>
     </div>
-</nav>
+</div>
 </body>
 </html>

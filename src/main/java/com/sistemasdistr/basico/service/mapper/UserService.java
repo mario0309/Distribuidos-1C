@@ -29,16 +29,42 @@ public class UserService {
 
     public User save(User user) {
         if (user.getPassword() != null && !user.getPassword().isBlank()) {
-            if (!user.getPassword().startsWith("$2a$") &&
-                !user.getPassword().startsWith("$2b$") &&
-                !user.getPassword().startsWith("$2y$")) {
+            if (!user.getPassword().startsWith("$2a$")
+                    && !user.getPassword().startsWith("$2b$")
+                    && !user.getPassword().startsWith("$2y$")) {
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
             }
         }
         return userRepository.save(user);
     }
 
-    public void deleteById(Integer id) {
+    public boolean isLastAdmin(Integer id) {
+        Optional<User> userOpt = userRepository.findById(id);
+
+        if (userOpt.isEmpty()) {
+            return false;
+        }
+
+        User user = userOpt.get();
+
+        if (user.getUserRole() == null || user.getUserRole().getRoleName() == null) {
+            return false;
+        }
+
+        if (!"ROLE_ADMIN".equals(user.getUserRole().getRoleName())) {
+            return false;
+        }
+
+        long totalAdmins = userRepository.countByUserRole_RoleName("ROLE_ADMIN");
+        return totalAdmins <= 1;
+    }
+
+    public boolean deleteByIdProtected(Integer id) {
+        if (isLastAdmin(id)) {
+            return false;
+        }
+
         userRepository.deleteById(id);
+        return true;
     }
 }
