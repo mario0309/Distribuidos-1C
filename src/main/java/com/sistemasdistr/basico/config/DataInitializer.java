@@ -4,6 +4,7 @@ import com.sistemasdistr.basico.model.Role;
 import com.sistemasdistr.basico.model.User;
 import com.sistemasdistr.basico.repository.RoleRepository;
 import com.sistemasdistr.basico.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,24 @@ public class DataInitializer implements CommandLineRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Value("${app.default.admin.username}")
+    private String adminUsername;
+
+    @Value("${app.default.admin.password}")
+    private String adminPassword;
+
+    @Value("${app.default.manager.username}")
+    private String managerUsername;
+
+    @Value("${app.default.manager.password}")
+    private String managerPassword;
+
+    @Value("${app.default.player.username}")
+    private String playerUsername;
+
+    @Value("${app.default.player.password}")
+    private String playerPassword;
+
     public DataInitializer(RoleRepository roleRepository,
                            UserRepository userRepository,
                            PasswordEncoder passwordEncoder) {
@@ -26,7 +45,7 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
 
         Role adminRole = roleRepository.findByRoleName("ROLE_ADMIN");
         if (adminRole == null) {
@@ -52,34 +71,34 @@ public class DataInitializer implements CommandLineRunner {
             playerRole = roleRepository.save(playerRole);
         }
 
-        if (userRepository.findUserByUsername("admin") == null) {
+        if (userRepository.findUserByUsername(adminUsername) == null) {
             User admin = new User();
-            admin.setUsername("admin");
+            admin.setUsername(adminUsername);
             admin.setEmailuser("admin@baskethub.local");
             admin.setNombreUsuario("Administrador");
-            admin.setPassword(passwordEncoder.encode("admin"));
+            admin.setPassword(passwordEncoder.encode(adminPassword));
             admin.setFechaUltimoAcceso(LocalDateTime.now());
             admin.setUserRole(adminRole);
             userRepository.save(admin);
         }
 
-        if (userRepository.findUserByUsername("manager") == null) {
+        if (userRepository.findUserByUsername(managerUsername) == null) {
             User manager = new User();
-            manager.setUsername("manager");
+            manager.setUsername(managerUsername);
             manager.setEmailuser("manager@baskethub.local");
             manager.setNombreUsuario("Manager");
-            manager.setPassword(passwordEncoder.encode("manager"));
+            manager.setPassword(passwordEncoder.encode(managerPassword));
             manager.setFechaUltimoAcceso(LocalDateTime.now());
             manager.setUserRole(managerRole);
             userRepository.save(manager);
         }
 
-        if (userRepository.findUserByUsername("player") == null) {
+        if (userRepository.findUserByUsername(playerUsername) == null) {
             User player = new User();
-            player.setUsername("player");
+            player.setUsername(playerUsername);
             player.setEmailuser("player@baskethub.local");
             player.setNombreUsuario("Player");
-            player.setPassword(passwordEncoder.encode("player"));
+            player.setPassword(passwordEncoder.encode(playerPassword));
             player.setFechaUltimoAcceso(LocalDateTime.now());
             player.setUserRole(playerRole);
             userRepository.save(player);
