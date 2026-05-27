@@ -11,8 +11,8 @@
 	<groupId>com.sistemasdistr</groupId>
 	<artifactId>basico</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>practica-obligatoria-2</name>
-	<description>Demo project for Spring Boot</description>
+	<name> BasketHub</name>
+	<description>Plataforma para administrar usuarios, equipos y jugadores de baloncesto con una experiencia visual moderna, segura y organizada.</description>
 	<url/>
 	<licenses>
 		<license/>
